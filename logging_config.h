@@ -30,7 +30,7 @@ extern "C"
 #define CUSTOMIZED  2
 
 #ifndef LOGGING_CONFIG
-#define LOGGING_CONFIG LIGHT_WEIGHT
+#define LOGGING_CONFIG FULL_FEATURES
 #endif
 
 #ifndef FILE_NAME_LENGTH
