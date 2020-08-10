@@ -74,12 +74,6 @@ extern "C"
 #define INIT_LOG(x)
 #endif
 
-#if (LOGGING_INTERFACE == SEGGER_RTT)
-#elif (LOGGING_INTERFACE == VCOM)
-#elif (LOGGING_INTERFACE == INTERFACE_BOTH)
-#else
-#endif
-
 static inline void __fill_file_line(char *in,
                                     uint8_t in_len,
                                     const char *file_name,
@@ -112,6 +106,18 @@ static inline void __fill_file_line(char *in,
            line);
   return;
 }
+
+#define HEX_DUMP(array_base, array_size, align, reverse)                                                                 \
+  do {                                                                                                                   \
+    for (int i_log_exlusive = 0; i_log_exlusive < (array_size); i_log_exlusive++) {                                      \
+      LOG(((i_log_exlusive + 1) % (align)) ? "%02X " : "%02X\n",                                                         \
+          (reverse) ? ((char*)(array_base))[array_size - i_log_exlusive - 1] : ((char*)(array_base))[i_log_exlusive]); } \
+    LOG("\n");                                                                                                           \
+  } while (0)
+
+#define HEX_DUMP_8(array_base, len)  HEX_DUMP((array_base), (len), 8, 0)
+#define HEX_DUMP_16(array_base, len)  HEX_DUMP((array_base), (len), 16, 0)
+#define HEX_DUMP_32(array_base, len)  HEX_DUMP((array_base), (len), 32, 0)
 
 #define __LOG_FILL_HEADER(flag)                                          \
   char exclusive_buf__[PREF_LEN] = { 0 };                                \
@@ -181,6 +187,7 @@ static inline void __fill_file_line(char *in,
       LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
     }                                                    \
   } while (0)
+
 #else // #if (LOGGING_CONFIG == LIGHT_WEIGHT)
 void logging_init(uint8_t level_threshold);
 void log_n(void);
