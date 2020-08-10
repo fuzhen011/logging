@@ -19,6 +19,7 @@
 #endif
 
 typedef struct {
+  uint8_t time_set;
   int min_level;
   size_t offset;
   char buf[LOGGING_BUF_LENGTH];
@@ -42,21 +43,37 @@ static lcfg_t lcfg = { 0 };
 
 static int _fill_time(void)
 {
-  sl_sleeptimer_date_t dt = { 0 };
-  sl_status_t sl_ret = sl_sleeptimer_get_datetime(&dt);
-  if (sl_ret != SL_STATUS_OK) {
+  if (lcfg.time_set) {
+    sl_sleeptimer_date_t dt = { 0 };
+    sl_status_t sl_ret = sl_sleeptimer_get_datetime(&dt);
+    if (sl_ret != SL_STATUS_OK) {
+      return -1;
+    }
+
+    int ret = snprintf(lcfg.buf,
+                       LOGGING_BUF_LENGTH - lcfg.offset,
+                       "[%04u-%02u-%02u %02u:%02u:%02u]",
+                       dt.year + 1900,
+                       dt.month + 1,
+                       dt.month_day,
+                       dt.hour,
+                       dt.min,
+                       dt.sec);
+    if (ret != -1) {
+      lcfg.offset += ret;
+      return 0;
+    }
     return -1;
   }
+  sl_sleeptimer_timestamp_t t = sl_sleeptimer_get_time();
 
   int ret = snprintf(lcfg.buf,
                      LOGGING_BUF_LENGTH - lcfg.offset,
-                     "[%04u-%02u-%02u %02u:%02u:%02u]",
-                     dt.year,
-                     dt.month + 1,
-                     dt.month_day,
-                     dt.hour,
-                     dt.min,
-                     dt.sec);
+                     "[RT-%ludays %02lu:%02lu:%02lu]",
+                     t / (24 * 60 * 60),
+                     (t % (24 * 60 * 60)) / (60 * 60),
+                     (t % (60 * 60)) / (60),
+                     t % 60);
   if (ret != -1) {
     lcfg.offset += ret;
     return 0;
@@ -262,6 +279,6 @@ void logging_demo(void)
   LOGH("%s\n", msg[4]);
   LOGD("%s\n", msg[5]);
   LOGV("%s\n", msg[6]);
-  LOGF("%s\n", msg[0]);
+  /* LOGF("%s\n", msg[0]); */
 }
 #endif // #if (LOGGING_CONFIG > LIGHT_WEIGHT)
