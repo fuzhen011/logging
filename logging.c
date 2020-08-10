@@ -270,7 +270,8 @@ void logging_level_threshold_set(uint8_t l)
 
 void hex_dump(const uint8_t *array_base,
               size_t len,
-              uint8_t align)
+              uint8_t align,
+              uint8_t reverse)
 {
   if (!align) {
     align = 16;
@@ -282,7 +283,7 @@ void hex_dump(const uint8_t *array_base,
     int r = snprintf(lcfg.buf + lcfg.offset,
                      LOGGING_BUF_LENGTH - lcfg.offset,
                      (i + 1) % align ? "%02X " : "%02X\n",
-                     array_base[len - i - 1]);
+                     reverse ? array_base[len - i - 1] : array_base[i]);
     if (r == -1) {
       return;
     }
@@ -311,4 +312,22 @@ void logging_demo(void)
   LOGH("%s\n", msg[4]);
   LOGD("%s\n", msg[5]);
   LOGV("%s\n", msg[6]);
+}
+
+void test_hex_dump(void)
+{
+  uint8_t buf[0xff];
+
+  for (int i = 0; i < 0xff; i++) {
+    buf[i] = i;
+  }
+
+  LOGH("Hex Dump with 8-byte alignment\n");
+  HEX_DUMP_8(buf, 0xff);
+
+  LOGI("Hex Dump with 16-byte alignment\n");
+  HEX_DUMP_16(buf, 0xff);
+
+  LOGW("Hex Dump with 32-byte alignment\n");
+  HEX_DUMP_32(buf, 0xff);
 }
