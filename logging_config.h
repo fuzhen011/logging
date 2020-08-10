@@ -30,18 +30,8 @@ extern "C"
 #define CUSTOMIZED  2
 
 #ifndef LOGGING_CONFIG
-#define LOGGING_CONFIG FULL_FEATURES
+#define LOGGING_CONFIG LIGHT_WEIGHT
 #endif
-
-/*
- * Configuration Items:
- *   TIME_ON - If to add time information to the logging piece
- *   LOCATION_ON - If to add location (file:line) information to the logging piece
- */
-
-#if (LOGGING_CONFIG == FULL_FEATURES)
-#define TIME_ON 1
-#define LOCATION_ON 1
 
 #ifndef FILE_NAME_LENGTH
 #define FILE_NAME_LENGTH  10
@@ -51,20 +41,10 @@ extern "C"
 #endif
 #define FILE_LINE_LENGTH  (FILE_NAME_LENGTH + LINE_NAME_LENGTH + 3)
 
-#elif (LOGGING_CONFIG == LIGHT_WEIGHT)
-#elif (LOGGING_CONFIG == CUSTOMIZED)
-#else
-#error "LOGGING_CONFIG value invalid"
-#endif
-
-#if !defined(TIME_ON)
-#error "TIME_ON NOT Defined"
-#endif
-
 /*
  * Logging Levels
  */
-enum{
+enum {
   LOGGING_FATAL,
   LOGGING_ERROR,
   LOGGING_WARNING,
@@ -74,6 +54,33 @@ enum{
   LOGGING_VERBOSE
 };
 
+/*
+ * Configuration Items:
+ *   TIME_ON - If to add time information to the logging piece
+ *   LOCATION_ON - If to add location (file:line) information to the logging piece
+ */
+
+#if (LOGGING_CONFIG == FULL_FEATURES)
+
+#define TIME_ON 1
+#define LOCATION_ON 1
+
+#elif (LOGGING_CONFIG == LIGHT_WEIGHT)
+
+#define TIME_ON 1
+#ifndef LOGGING_LEVEL
+#define LOGGING_LEVEL LOGGING_VERBOSE
+#endif
+
+#elif (LOGGING_CONFIG == CUSTOMIZED)
+#else
+#error "LOGGING_CONFIG value invalid"
+#endif
+
+#if !defined(TIME_ON)
+#error "TIME_ON NOT Defined"
+#endif
+
 #define FTL_FLAG  "[" RTT_CTRL_BG_BRIGHT_RED "FTL" RTT_CTRL_RESET "]"
 #define ERR_FLAG  "[" RTT_CTRL_TEXT_BRIGHT_RED "ERR" RTT_CTRL_RESET "]"
 #define WRN_FLAG  "[" RTT_CTRL_BG_BRIGHT_YELLOW "WRN" RTT_CTRL_RESET "]"
@@ -81,6 +88,10 @@ enum{
 #define DHL_FLAG  "[" RTT_CTRL_BG_BRIGHT_CYAN "DHL" RTT_CTRL_RESET "]"
 #define DBG_FLAG  "[" RTT_CTRL_TEXT_BRIGHT_GREEN "DBG" RTT_CTRL_RESET "]"
 #define VER_FLAG  "[VER]"
+
+#define PREF_LEN  (64)
+#define FILE_LINE_LEN (20)
+#define FMT_PREF  "[RT-%4lu:%02lu:%02lu:%02lu]%s%s: "
 
 #ifdef __cplusplus
 }

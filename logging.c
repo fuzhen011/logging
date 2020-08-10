@@ -262,26 +262,6 @@ void logging_init(uint8_t level_threshold)
   __logging_welcome();
 }
 
-void logging_demo(void)
-{
-  const char *msg[] = {
-    "This is an fatal message",
-    "This is an error message",
-    "This is a  warning message",
-    "This is a  important info message",
-    "This is a  debug highlight message",
-    "This is a  debug message",
-    "This is a  verbose message",
-  };
-  /* LOGF("%s\n", msg[0]); */
-  LOGE("%s\n", msg[1]);
-  LOGW("%s\n", msg[2]);
-  LOGI("%s\n", msg[3]);
-  LOGH("%s\n", msg[4]);
-  LOGD("%s\n", msg[5]);
-  LOGV("%s\n", msg[6]);
-}
-
 void logging_level_threshold_set(uint8_t l)
 {
   /* Fatal cannot be disabled */
@@ -312,3 +292,23 @@ void hex_dump(const uint8_t *array_base,
   log_n();
 }
 #endif // #if (LOGGING_CONFIG > LIGHT_WEIGHT)
+
+void logging_demo(void)
+{
+  const char *msg[] = {
+    "This is an fatal message",
+    "This is an error message",
+    "This is a  warning message",
+    "This is a  important info message",
+    "This is a  debug highlight message",
+    "This is a  debug message",
+    "This is a  verbose message",
+  };
+  /* LOGF("%s\n", msg[0]); */
+  LOGE("%s\n", msg[1]);
+  LOGW("%s\n", msg[2]);
+  LOGI("%s\n", msg[3]);
+  LOGH("%s\n", msg[4]);
+  LOGD("%s\n", msg[5]);
+  LOGV("%s\n", msg[6]);
+}
