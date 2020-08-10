@@ -69,7 +69,7 @@ static int _fill_time(void)
 
   int ret = snprintf(lcfg.buf,
                      LOGGING_BUF_LENGTH - lcfg.offset,
-                     "[RT-%ludays %02lu:%02lu:%02lu]",
+                     "[RT-%lu:%02lu:%02lu:%02lu]",
                      t / (24 * 60 * 60),
                      (t % (24 * 60 * 60)) / (60 * 60),
                      (t % (60 * 60)) / (60),
@@ -273,12 +273,42 @@ void logging_demo(void)
     "This is a  debug message",
     "This is a  verbose message",
   };
+  /* LOGF("%s\n", msg[0]); */
   LOGE("%s\n", msg[1]);
   LOGW("%s\n", msg[2]);
   LOGI("%s\n", msg[3]);
   LOGH("%s\n", msg[4]);
   LOGD("%s\n", msg[5]);
   LOGV("%s\n", msg[6]);
-  /* LOGF("%s\n", msg[0]); */
+}
+
+void logging_level_threshold_set(uint8_t l)
+{
+  /* Fatal cannot be disabled */
+  lcfg.min_level = MIN(l, LOGGING_VERBOSE);
+}
+
+void hex_dump(const uint8_t *array_base,
+              size_t len,
+              uint8_t align)
+{
+  if (!align) {
+    align = 16;
+  }
+
+  lcfg.offset = 0;
+  memset(lcfg.buf, 0, LOGGING_BUF_LENGTH);
+  for (int i = 0; i < len; i++) {
+    int r = snprintf(lcfg.buf + lcfg.offset,
+                     LOGGING_BUF_LENGTH - lcfg.offset,
+                     (i + 1) % align ? "%02X " : "%02X\n",
+                     array_base[len - i - 1]);
+    if (r == -1) {
+      return;
+    }
+    lcfg.offset += r;
+  }
+  __logging(lcfg.buf);
+  log_n();
 }
 #endif // #if (LOGGING_CONFIG > LIGHT_WEIGHT)

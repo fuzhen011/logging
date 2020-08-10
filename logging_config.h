@@ -14,7 +14,7 @@ extern "C"
 #include "logging_color_def.h"
 
 #ifndef LOGGING_BUF_LENGTH
-#define LOGGING_BUF_LENGTH  512
+#define LOGGING_BUF_LENGTH  1024
 #endif
 
 #define SEGGER_RTT  1
@@ -22,7 +22,7 @@ extern "C"
 #define INTERFACE_BOTH  (SEGGER_RTT | VCOM)
 
 #ifndef LOGGING_INTERFACE
-#define LOGGING_INTERFACE VCOM
+#define LOGGING_INTERFACE INTERFACE_BOTH
 #endif
 
 #define LIGHT_WEIGHT  0
@@ -65,7 +65,7 @@ extern "C"
  * Logging Levels
  */
 enum{
-  LOGGING_FATAL = -1,
+  LOGGING_FATAL,
   LOGGING_ERROR,
   LOGGING_WARNING,
   LOGGING_IMPORTANT_INFO,
@@ -79,7 +79,7 @@ enum{
 #define WRN_FLAG  "[" RTT_CTRL_BG_BRIGHT_YELLOW "WRN" RTT_CTRL_RESET "]"
 #define IPM_FLAG  "[" RTT_CTRL_BG_BRIGHT_MAGENTA "IPM" RTT_CTRL_RESET "]"
 #define DHL_FLAG  "[" RTT_CTRL_BG_BRIGHT_CYAN "DHL" RTT_CTRL_RESET "]"
-#define DBG_FLAG  "[" RTT_CTRL_TEXT_GREEN "DBG" RTT_CTRL_RESET "]"
+#define DBG_FLAG  "[" RTT_CTRL_TEXT_BRIGHT_GREEN "DBG" RTT_CTRL_RESET "]"
 #define VER_FLAG  "[VER]"
 
 #ifdef __cplusplus

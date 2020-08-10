@@ -36,15 +36,22 @@ extern "C"
 void logging_init(uint8_t level_threshold);
 void logging_demo(void);
 void log_n(void);
-
+void logging_level_threshold_set(uint8_t l);
 int __log(const char *file_name, unsigned int line,
           int lvl,
           const char *fmt, ...);
+void hex_dump(const uint8_t *array_base,
+              size_t len,
+              uint8_t align);
 
 #define INIT_LOG(x) logging_init(x)
 
 #define LOG(lvl, fmt, ...) __log(__FILE__, __LINE__, (lvl), (fmt), ##__VA_ARGS__)
 #define LOGN() log_n()
+
+#define HEX_DUMP_8(array_base, len)  hex_dump((array_base), (len), 8)
+#define HEX_DUMP_16(array_base, len)  hex_dump((array_base), (len), 16)
+#define HEX_DUMP_32(array_base, len)  hex_dump((array_base), (len), 32)
 
 /*
  * Below 7 LOGx macros are used for logging data in specific level.
