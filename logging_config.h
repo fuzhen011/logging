@@ -13,6 +13,10 @@ extern "C"
 #endif
 #include "logging_color_def.h"
 
+#ifndef FATAL_ABORT
+#define FATAL_ABORT 0
+#endif
+
 #ifndef LOGGING_BUF_LENGTH
 #define LOGGING_BUF_LENGTH  1024
 #endif

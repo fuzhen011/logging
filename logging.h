@@ -27,7 +27,14 @@ extern "C"
   #define MAX(a, b)         (((a) > (b)) ? (a) : (b))
 #endif
 
+#if (FATAL_ABORT == 0)
+#define ABORT()
+#else
+#define ABORT() abort()
+#endif
+
 #if (LOGGING_CONFIG == LIGHT_WEIGHT)
+/* Light weight mode start */
 
 #if (TIME_ON != 0)
 #include "sl_sleeptimer.h"
@@ -137,7 +144,7 @@ static inline void __fill_file_line(char *in,
   do {                                                 \
     __LOG_FILL_HEADER(FTL_FLAG);                       \
     __LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
-    abort();                                           \
+    ABORT();                                           \
   } while (0)
 
 #define LOGE(__fmt__, ...)                               \
@@ -188,6 +195,7 @@ static inline void __fill_file_line(char *in,
     }                                                    \
   } while (0)
 
+/* Light weight mode end */
 #else // #if (LOGGING_CONFIG == LIGHT_WEIGHT)
 void logging_init(uint8_t level_threshold);
 void log_n(void);
@@ -213,7 +221,7 @@ void hex_dump(const uint8_t *array_base,
  * Below 7 LOGx macros are used for logging data in specific level.
  */
 #define LOGF(fmt, ...) \
-  do { __LOG(LOGGING_FATAL, (fmt), ##__VA_ARGS__); abort(); } while (0)
+  do { __LOG(LOGGING_FATAL, (fmt), ##__VA_ARGS__); ABORT(); } while (0)
 #define LOGE(fmt, ...) __LOG(LOGGING_ERROR, (fmt), ##__VA_ARGS__)
 #define LOGW(fmt, ...) __LOG(LOGGING_WARNING, (fmt), ##__VA_ARGS__)
 #define LOGI(fmt, ...) __LOG(LOGGING_IMPORTANT_INFO, (fmt), ##__VA_ARGS__)

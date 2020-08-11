@@ -300,15 +300,15 @@ void hex_dump(const uint8_t *array_base,
 void logging_demo(void)
 {
   const char *msg[] = {
-    "This is an fatal message",
+    "This is a  fatal message",
     "This is an error message",
     "This is a  warning message",
-    "This is a  important info message",
+    "This is an important info message",
     "This is a  debug highlight message",
     "This is a  debug message",
     "This is a  verbose message",
   };
-  /* LOGF("%s\n", msg[0]); */
+  LOGF("%s\n", msg[0]);
   LOGE("%s\n", msg[1]);
   LOGW("%s\n", msg[2]);
   LOGI("%s\n", msg[3]);
