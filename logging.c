@@ -314,20 +314,21 @@ void logging_demo(void)
   LOGV("%s\n", msg[6]);
 }
 
+#define TEST_HEX_DUMP_BUF_LEN (32 * 4 + 11)
 void test_hex_dump(void)
 {
-  uint8_t buf[0xff];
+  uint8_t buf[TEST_HEX_DUMP_BUF_LEN];
 
-  for (int i = 0; i < 0xff; i++) {
+  for (int i = 0; i < TEST_HEX_DUMP_BUF_LEN; i++) {
     buf[i] = i;
   }
 
   LOGH("Hex Dump with 8-byte alignment\n");
-  HEX_DUMP_8(buf, 0xff);
+  HEX_DUMP_8(buf, TEST_HEX_DUMP_BUF_LEN);
 
   LOGI("Hex Dump with 16-byte alignment\n");
-  HEX_DUMP_16(buf, 0xff);
+  HEX_DUMP_16(buf, TEST_HEX_DUMP_BUF_LEN);
 
   LOGW("Hex Dump with 32-byte alignment\n");
-  HEX_DUMP_32(buf, 0xff);
+  HEX_DUMP_32(buf, TEST_HEX_DUMP_BUF_LEN);
 }
