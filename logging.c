@@ -50,7 +50,7 @@ static int _fill_time(void)
       return -1;
     }
 
-    int ret = snprintf(lcfg.buf,
+    int ret = snprintf(lcfg.buf + lcfg.offset,
                        LOGGING_BUF_LENGTH - lcfg.offset,
                        "[%04u-%02u-%02u %02u:%02u:%02u]",
                        dt.year + 1900,
@@ -67,7 +67,7 @@ static int _fill_time(void)
   }
   sl_sleeptimer_timestamp_t t = sl_sleeptimer_get_time();
 
-  int ret = snprintf(lcfg.buf,
+  int ret = snprintf(lcfg.buf + lcfg.offset,
                      LOGGING_BUF_LENGTH - lcfg.offset,
                      "[RT-%lu:%02lu:%02lu:%02lu]",
                      t / (24 * 60 * 60),
@@ -165,10 +165,8 @@ static int _fill_level(int lvl)
 
   p = lcfg.buf + lcfg.offset;
   /* sizeof contains the '\0' */
-  memcpy(p, flag, flaglen);
-  p[flaglen - 1] = ':';
-  p[flaglen] = ' ';
-  lcfg.offset += flaglen + 1;
+  memcpy(p, flag, flaglen - 1);
+  lcfg.offset += flaglen - 1;
   return 0;
 }
 
@@ -211,6 +209,11 @@ int __log(const char *file_name, unsigned int line,
 #endif
 
   _fill_level(lvl);
+
+  /* fill whatever other modules here */
+
+  lcfg.buf[lcfg.offset++] = ':';
+  lcfg.buf[lcfg.offset++] = ' ';
 
   va_start(valist, fmt);
   vsnprintf(lcfg.buf + lcfg.offset,

@@ -39,7 +39,7 @@ extern "C"
 #endif
 
 #if (LOGGING_INTERFACE == SEGGER_RTT)
-#define LOG(...)                SEGGER_RTT_printf(0, __VA_ARGS__)
+#define __LOG(...)                SEGGER_RTT_printf(0, __VA_ARGS__)
 
 #define INIT_LOG(x)                                                    \
   do{                                                                  \
@@ -49,7 +49,7 @@ extern "C"
   }while (0)
 
 #elif (LOGGING_INTERFACE == VCOM)
-#define LOG(...)                printf(__VA_ARGS__)
+#define __LOG(...)                printf(__VA_ARGS__)
 
 #define INIT_LOG(x)                                                    \
   do{                                                                  \
@@ -57,7 +57,7 @@ extern "C"
     LOGI("Project Boots, Compiled at %s - %s.\n", __DATE__, __TIME__); \
   }while (0)
 #elif (LOGGING_INTERFACE == INTERFACE_BOTH)
-#define LOG(...)                       \
+#define __LOG(...)                       \
   do {                                 \
     printf(__VA_ARGS__);               \
     SEGGER_RTT_printf(0, __VA_ARGS__); \
@@ -70,7 +70,7 @@ extern "C"
     LOGI("Project Boots, Compiled at %s - %s.\n", __DATE__, __TIME__); \
   }while (0)
 #else
-#define LOG(...)
+#define __LOG(...)
 #define INIT_LOG(x)
 #endif
 
@@ -110,9 +110,9 @@ static inline void __fill_file_line(char *in,
 #define HEX_DUMP(array_base, array_size, align, reverse)                                                                 \
   do {                                                                                                                   \
     for (int i_log_exlusive = 0; i_log_exlusive < (array_size); i_log_exlusive++) {                                      \
-      LOG(((i_log_exlusive + 1) % (align)) ? "%02X " : "%02X\n",                                                         \
+      __LOG(((i_log_exlusive + 1) % (align)) ? "%02X " : "%02X\n",                                                         \
           (reverse) ? ((char*)(array_base))[array_size - i_log_exlusive - 1] : ((char*)(array_base))[i_log_exlusive]); } \
-    LOG("\n");                                                                                                           \
+    __LOG("\n");                                                                                                           \
   } while (0)
 
 #define HEX_DUMP_8(array_base, len)  HEX_DUMP((array_base), (len), 8, 0)
@@ -136,7 +136,7 @@ static inline void __fill_file_line(char *in,
 #define LOGF(__fmt__, ...)                             \
   do {                                                 \
     __LOG_FILL_HEADER(FTL_FLAG);                       \
-    LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
+    __LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
     abort();                                           \
   } while (0)
 
@@ -144,7 +144,7 @@ static inline void __fill_file_line(char *in,
   do {                                                   \
     if (LOGGING_LEVEL >=  LOGGING_ERROR) {               \
       __LOG_FILL_HEADER(ERR_FLAG);                       \
-      LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
+      __LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
     }                                                    \
   } while (0)
 
@@ -152,7 +152,7 @@ static inline void __fill_file_line(char *in,
   do {                                                   \
     if (LOGGING_LEVEL >=  LOGGING_WARNING) {             \
       __LOG_FILL_HEADER(WRN_FLAG);                       \
-      LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
+      __LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
     }                                                    \
   } while (0)
 
@@ -160,7 +160,7 @@ static inline void __fill_file_line(char *in,
   do {                                                   \
     if (LOGGING_LEVEL >=  LOGGING_IMPORTANT_INFO) {      \
       __LOG_FILL_HEADER(IPM_FLAG);                       \
-      LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
+      __LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
     }                                                    \
   } while (0)
 
@@ -168,7 +168,7 @@ static inline void __fill_file_line(char *in,
   do {                                                   \
     if (LOGGING_LEVEL >=  LOGGING_DEBUG_HIGHTLIGHT) {    \
       __LOG_FILL_HEADER(DHL_FLAG);                       \
-      LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
+      __LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
     }                                                    \
   } while (0)
 
@@ -176,7 +176,7 @@ static inline void __fill_file_line(char *in,
   do {                                                   \
     if (LOGGING_LEVEL >=  LOGGING_DEBUG) {               \
       __LOG_FILL_HEADER(DBG_FLAG);                       \
-      LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
+      __LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
     }                                                    \
   } while (0)
 
@@ -184,7 +184,7 @@ static inline void __fill_file_line(char *in,
   do {                                                   \
     if (LOGGING_LEVEL >=  LOGGING_VERBOSE) {             \
       __LOG_FILL_HEADER(VER_FLAG);                       \
-      LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
+      __LOG("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
     }                                                    \
   } while (0)
 
@@ -202,7 +202,7 @@ void hex_dump(const uint8_t *array_base,
 
 #define INIT_LOG(x) logging_init(x)
 
-#define LOG(lvl, fmt, ...) __log(__FILE__, __LINE__, (lvl), (fmt), ##__VA_ARGS__)
+#define __LOG(lvl, fmt, ...) __log(__FILE__, __LINE__, (lvl), (fmt), ##__VA_ARGS__)
 #define LOGN() log_n()
 
 #define HEX_DUMP_8(array_base, len)  hex_dump((array_base), (len), 8, 0)
@@ -213,13 +213,14 @@ void hex_dump(const uint8_t *array_base,
  * Below 7 LOGx macros are used for logging data in specific level.
  */
 #define LOGF(fmt, ...) \
-  do { LOG(LOGGING_FATAL, (fmt), ##__VA_ARGS__); abort(); } while (0)
-#define LOGE(fmt, ...) LOG(LOGGING_ERROR, (fmt), ##__VA_ARGS__)
-#define LOGW(fmt, ...) LOG(LOGGING_WARNING, (fmt), ##__VA_ARGS__)
-#define LOGI(fmt, ...) LOG(LOGGING_IMPORTANT_INFO, (fmt), ##__VA_ARGS__)
-#define LOGH(fmt, ...) LOG(LOGGING_DEBUG_HIGHTLIGHT, (fmt), ##__VA_ARGS__)
-#define LOGD(fmt, ...) LOG(LOGGING_DEBUG, (fmt), ##__VA_ARGS__)
-#define LOGV(fmt, ...) LOG(LOGGING_VERBOSE, (fmt), ##__VA_ARGS__)
+  do { __LOG(LOGGING_FATAL, (fmt), ##__VA_ARGS__); abort(); } while (0)
+#define LOGE(fmt, ...) __LOG(LOGGING_ERROR, (fmt), ##__VA_ARGS__)
+#define LOGW(fmt, ...) __LOG(LOGGING_WARNING, (fmt), ##__VA_ARGS__)
+#define LOGI(fmt, ...) __LOG(LOGGING_IMPORTANT_INFO, (fmt), ##__VA_ARGS__)
+#define LOGH(fmt, ...) __LOG(LOGGING_DEBUG_HIGHTLIGHT, (fmt), ##__VA_ARGS__)
+#define LOGD(fmt, ...) __LOG(LOGGING_DEBUG, (fmt), ##__VA_ARGS__)
+#define LOGV(fmt, ...) __LOG(LOGGING_VERBOSE, (fmt), ##__VA_ARGS__)
+#define LOG(lvl, fmt, ...) __LOG(lvl, (fmt), ##__VA_ARGS__)
 
 #define LOGBGE(what, err) LOGE(what " returns Error[0x%04x]\n", (err))
 
