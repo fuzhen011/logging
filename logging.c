@@ -183,6 +183,21 @@ static inline void __logging(const char *str)
 #endif
 }
 
+void logging_plain(const char *fmt, ...)
+{
+  va_list valist;
+
+  lcfg.offset = 0;
+  memset(lcfg.buf, 0, LOGGING_BUF_LENGTH);
+  va_start(valist, fmt);
+  vsnprintf(lcfg.buf + lcfg.offset,
+            LOGGING_BUF_LENGTH - lcfg.offset,
+            fmt,
+            valist);
+
+  __logging(lcfg.buf);
+}
+
 int __log(const char *file_name, unsigned int line,
           int lvl,
           const char *fmt, ...)
