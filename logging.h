@@ -197,6 +197,7 @@ static inline void __fill_file_line(char *in,
 
 /* Light weight mode end */
 #else // #if (LOGGING_CONFIG == LIGHT_WEIGHT)
+#include "sl_sleeptimer.h"
 void logging_init(uint8_t level_threshold);
 void log_n(void);
 void logging_level_threshold_set(uint8_t l);
