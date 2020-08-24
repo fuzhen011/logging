@@ -250,6 +250,28 @@ void logging_plain(const char *fmt, ...);
 
 #endif // #if (LOGGING_CONFIG > LIGHT_WEIGHT)
 
+#ifndef ASSERT
+#define ASSERT  LOG_ASSERT
+#endif
+
+#define LOG_ASSERT(exp) \
+  do{                   \
+    if (!(exp)) {       \
+      LOGF("Assert\n"); \
+    }                   \
+  }while(0)
+
+#ifndef ASSERT_MSG
+#define ASSERT_MSG  LOG_ASSERT_MSG
+#endif
+
+#define LOG_ASSERT_MSG(exp, fmt, ...)       \
+  do{                                       \
+    if (!(exp)) {                           \
+      LOGF("Assert - " fmt, ##__VA_ARGS__); \
+    }                                       \
+  }while(0)
+
 /*
  * For demostration or testing
  */
