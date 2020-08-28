@@ -254,22 +254,22 @@ void logging_plain(const char *fmt, ...);
 #define ASSERT  LOG_ASSERT
 #endif
 
-#define LOG_ASSERT(exp) \
-  do{                   \
-    if (!(exp)) {       \
-      LOGF("Assert\n"); \
-    }                   \
+#define LOG_ASSERT(exp)                   \
+  do{                                     \
+    if (!(exp)) {                         \
+      LOGF("Assert in [%s]\n", __func__); \
+    }                                     \
   }while(0)
 
 #ifndef ASSERT_MSG
 #define ASSERT_MSG  LOG_ASSERT_MSG
 #endif
 
-#define LOG_ASSERT_MSG(exp, fmt, ...)       \
-  do{                                       \
-    if (!(exp)) {                           \
-      LOGF("Assert - " fmt, ##__VA_ARGS__); \
-    }                                       \
+#define LOG_ASSERT_MSG(exp, fmt, ...)                         \
+  do{                                                         \
+    if (!(exp)) {                                             \
+      LOGF("Assert in [%s] - " fmt, __func__, ##__VA_ARGS__); \
+    }                                                         \
   }while(0)
 
 /*
