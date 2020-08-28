@@ -297,7 +297,7 @@ void hex_dump(const uint8_t *array_base,
 
   lcfg.offset = 0;
   memset(lcfg.buf, 0, LOGGING_BUF_LENGTH);
-  for (int i = 0; i < len; i++) {
+  for (size_t i = 0; i < len; i++) {
     int r = snprintf(lcfg.buf + lcfg.offset,
                      LOGGING_BUF_LENGTH - lcfg.offset,
                      (i + 1) % align ? "%02X " : "%02X\n",
