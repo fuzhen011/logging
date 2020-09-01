@@ -312,7 +312,7 @@ void hex_dump(const uint8_t *array_base,
 }
 #endif // #if (LOGGING_CONFIG > LIGHT_WEIGHT)
 
-void logging_demo(void)
+void logging_demo(uint8_t lvl)
 {
   const char *msg[] = {
     "This is a  fatal message",
@@ -323,13 +323,44 @@ void logging_demo(void)
     "This is a  debug message",
     "This is a  verbose message",
   };
-  LOGF("%s\n", msg[0]);
-  LOGE("%s\n", msg[1]);
-  LOGW("%s\n", msg[2]);
-  LOGI("%s\n", msg[3]);
-  LOGH("%s\n", msg[4]);
-  LOGD("%s\n", msg[5]);
-  LOGV("%s\n", msg[6]);
+
+  switch (lvl) {
+    case LOGGING_FATAL:
+      LOGF("%s\n", msg[0]);
+      break;
+    case LOGGING_ERROR:
+      LOGE("%s\n", msg[1]);
+      break;
+    case LOGGING_WARNING:
+      LOGW("%s\n", msg[2]);
+      break;
+    case LOGGING_IMPORTANT_INFO:
+      LOGI("%s\n", msg[3]);
+      break;
+    case LOGGING_DEBUG_HIGHTLIGHT:
+      LOGH("%s\n", msg[4]);
+      break;
+    case LOGGING_DEBUG:
+      LOGD("%s\n", msg[5]);
+      break;
+    case LOGGING_VERBOSE:
+      LOGV("%s\n", msg[6]);
+      break;
+    case 0xFF:
+      LOGF("%s\n", msg[0]);
+      LOGE("%s\n", msg[1]);
+      LOGW("%s\n", msg[2]);
+      LOGI("%s\n", msg[3]);
+      LOGH("%s\n", msg[4]);
+      LOGD("%s\n", msg[5]);
+      LOGV("%s\n", msg[6]);
+      break;
+    default:
+      LOGE("Invalid input value, range [%d:%d] and 0xff for all\n",
+           LOGGING_FATAL,
+           LOGGING_ERROR);
+      break;
+  }
 }
 
 #define TEST_HEX_DUMP_BUF_LEN (32 * 4 + 11)

@@ -275,7 +275,7 @@ void logging_plain(const char *fmt, ...);
 /*
  * For demostration or testing
  */
-void logging_demo(void);
+void logging_demo(uint8_t lvl);
 void test_hex_dump(void);
 #ifdef __cplusplus
 }
