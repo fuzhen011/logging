@@ -1,6 +1,6 @@
 # Log System
 
-## Description
+## Introduction
 
 Logging is very important for developing embedded products. This is especially true for connection-based wireless products because the use of breakpoints will probably result in dropped connections, whereas issues can be easily addressed by walking through the log.
 
@@ -20,64 +20,60 @@ By default, each piece of logging contains below information.
 - Location - the file and line information where the logging located will be recorded into the logging.
 - Level - it supports 7 levels logging, identified by color. See below picture and table.
 
+![Demo Screenshot](./doc/images/demo_screenshot.jpg)
 
-The images above show different levels of logging in different colors. This example introduces 5 logging levels, as shown below.
+| Type                   | Color             | Note                                                       |
+| ---------------------- | ----------------- | ---------------------------------------------------------- |
+| Fatal (highest level)  | Backgroud Red     | Non-maskable, configurable if to assert or not when called |
+| Error                  | Red               | Maskable                                                   |
+| Warning                | Backgroud Yellow  | Maskable                                                   |
+| Important Information  | Backgroud Magenta | Maskable                                                   |
+| Debug Highlight        | Backgroud Magenta | Maskable                                                   |
+| Debug                  | Backgroud Cyan    | Maskable                                                   |
+| Verbose (lowest level) | White             | Maskable                                                   |
 
-| Type                   | color  |
-| ---------------------- | ------ |
-| Error (highest level)  | Red    |
-| Warning                | Yellow |
-| Information            | Blue   |
-| Debug                  | Green  |
-| Verbose (lowest level) | White  |
+### Filtering
 
-## Setting up
+It's runtime configurable to set a threshold while log messages with higher level than or equal to the threshold will be sent to the logging interface, whereas log messages with lower level than the threshold will be ignored and discarded. For example, if the threshold is set to _Important Information_, then logging messages with _Fatal_, _Error_, _Warning_ and _Important Information_ levels will be sent to the logging interface, the others will be ignored.
 
-To be able to test the logger module do as follows:
+### Memory Usage
+
+Currently, it supports full featured and lightweight modes. In full featured mode, logging.c is necessary to be built and a dedicated buffer for storing the logging message will be allocated statically. For lightweight mode, logging.c is not necessary to be built and all the functionalities are mostly provided as macros, there is no memory needs to be allocated and logging message is passed to the underlying functions directly. The way to store the message depends on the implementation of the underlying functions.
+
+From the functionality perspective, the only difference between these 2 modes is that the lightweight mode doesn't support runtime threshold configuration, which can only be hardcoded at compiling time.
+
+## Setting Up
+
+### Integrated to GSDK 2.7
 
 1. Create a new _SoC-Empty_ example project in Simplicity Studio.
 
-2. Copy the attached _app.c_, _log.c_, _log.h_ files into your project (overwriting existing _app.c_).
+2. Download the logging project into your SoC-Empty project space.
 
-3. `LOG_PORT`, defined in _log.h_, can be set to **SEGGER_JLINK_VIEWER** or **PORT_VCOM** to determine if you want to send debug messages via DEBUG port or COM port (UART).
+3. Open the logging_config.h and modify below settings if needed.
 
-   - **SEGGER_JLINK_VIEWER** – the log will be out from J-Link RTT.
-   - **PORT_VCOM**
-     - If `HAL_VCOM_ENABLE` is enabled in _hal-config.h_, the log will be out from VCOM via USB. This is the default configuration in a _SOC - Empty_ project.
-     - If `HAL_VCOM_ENABLE` is disabled, the log will be out from the UART TX pin directly which can be accessed on the expansion header of the WSTK
+   - LOGGING_CONFIG - see [Memory Usage](#memory-usage)
+   - LOGGING_BUF_LENGTH - size of the dedicated buffer for the full featured mode.
+   - LOGGING_INTERFACE - decide which interface or both the logging will be sent to.
+   - FATAL_ABORT - if assert the program when a fatal logging is called.
+   - LOGGING_LEVEL - set the threshold for logging levels in the lightweight mode.
 
-4. If you use the COM port (UART) for logging, copy _VCOM_RTT.h_ into your project. If you use SEGGER_JLINK_VIEWER, copy \*SEGGER_RTT\*.\*\* files into your project.
+4. Add _INIT_LOG(0xff);_ to the initialization code place and include "logging/logging.h" to the file you want to use the logging functionality.
 
-5. Define `LOG_LEVEL` in _log.h_. The definition of `LOG_LEVEL` determines which level of logging should be output to the terminal. As you can see from the table 1, error has the highest level while verbose has the lowest level. For example, If the `LOG_LEVEL` is defined as information level, then error, warning and information log will be sent to terminal, the debug and verbose log which have lower level than information will not be sent to the terminal. See figure below, which shows the log as information level without modifying anything from the first figure, using RTT.
-   ![Log with Information Level](images/log_info_lvl.png)
+5. Add your own logging to the project.
 
-6. Build and flash the project to your device
+6. Build and flash the image to your board, connect your board with the proper interface to view the log.
 
-## Usage
+### Integrated to GSDK 3.0
 
-1. On your PC open a terminal program and connect to the chosen port (e.g. you can use TeraTerm to connect via VCOM and RTT Viewer to connect via DEBUG port).
+If using the RTT as the logging interface, follow the same instruction as above - [Integrated to GSDK 2.7](#integrated-to-gsdk-2.7).
 
-2. Reset your device and observe the log messages.
+If using serial port as the logging interface, it's needed to add 2 steps between step 3 and 4 of [Integrated to GSDK 2.7](#integrated-to-gsdk-2.7).
 
-3. You may also open a Bluetooth connection to see more logs.
+- Open the \${PROJECT*NAME}.slcp file and install the \_IO Stream: USART* and and _IO Stream: Retarget STDIO_ components.
 
-You can add new logs to your project. The following are 5 corresponding functions to send the log. The input parameter of these five functions is the same as standard printf();.
+- Set the SL_BOARD_ENABLE_VCOM to 1 in sl_board_control_config.h
 
-- `LOGE()` – Send ERROR log.
-- `LOGW()` – Send WARNING log.
-- `LOGI()` – Send INFORMATION log.
-- `LOGD()` – Send DEBUG log.
-- `LOGV()` – Send VERBOSE log.
+## Get the Project
 
-Use these functions in your code to print different level logs.
-
-## Source
-
-- [app.c](source/app.c)
-- [log.c](source/log.c)
-- [log.h](source/log.h)
-- [VCOM_RTT.h](source/VCOM_RTT.h)
-- [SEGGER_RTT.c](source/SEGGER_RTT.c)
-- [SEGGER_RTT.h](source/SEGGER_RTT.h)
-- [SEGGER_RTT_Conf.h](source/SEGGER_RTT_Conf.h)
-- [SEGGER_RTT_printf.c](source/SEGGER_RTT_printf.c)
+The logging project can be found in [Github](https://github.com/silabs-kevin/logging).
