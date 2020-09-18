@@ -67,12 +67,20 @@ enum {
 
 #if (LOGGING_CONFIG == FULL_FEATURES)
 
-#define TIME_ON 1
+#ifndef TIME_ON
+#define TIME_ON 0
+#endif
+
+#ifndef LOCATION_ON
 #define LOCATION_ON 1
+#endif
 
 #elif (LOGGING_CONFIG == LIGHT_WEIGHT)
 
+#ifndef TIME_ON
 #define TIME_ON 1
+#endif
+
 #ifndef LOGGING_LEVEL
 #define LOGGING_LEVEL LOGGING_VERBOSE
 #endif
