@@ -274,6 +274,43 @@ void logging_plain(const char *fmt, ...);
     }                                                         \
   }while(0)
 
+/**
+ * @defgroup utils
+ * @brief - Utils
+ * @{ */
+
+/**
+ * @brief SE_CALL - Check BGAPI call return value, if not bg_err_success, assert,
+ * dedicated for GSDK version 2.x
+ *
+ * @param x - BGAPI function
+ *
+ */
+#define SE_CALL(x)                                                     \
+  do {                                                                 \
+    uint16_t se_call_exclusive_returned_value = (x)->result;           \
+    LOG_ASSERT_MSG(se_call_exclusive_returned_value == bg_err_success, \
+                   "BGAPI Call Failed, Error Code: 0x%04x\n",          \
+                   se_call_exclusive_returned_value);                  \
+  }while(0)
+
+/**
+ * @brief SE_CALL - Check BGAPI call return value, if not bg_err_success, assert,
+ * dedicated for GSDK version 3.x
+ *
+ * @param x - BGAPI function
+ *
+ */
+#define SE_CALL3(x)                                                  \
+  do {                                                               \
+    uint32_t se_call_exclusive_returned_value = (x);                 \
+    LOG_ASSERT_MSG(se_call_exclusive_returned_value == SL_STATUS_OK, \
+                   "BGAPI Call Failed, Error Code: 0x%04x\n",        \
+                   se_call_exclusive_returned_value);                \
+  }while(0)
+
+/**  @} */
+
 /*
  * For demostration or testing
  */
