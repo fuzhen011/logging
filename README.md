@@ -1,14 +1,16 @@
+<!-- Author: Zhen Fu -->
+
 # Log System
 
 ## Introduction
 
 Logging is very important for developing embedded products. This is especially true for connection-based wireless products because the use of breakpoints will probably result in dropped connections, whereas issues can be easily addressed by walking through the log.
 
-This example introduces a simple implementation of logging on EFR32 based devices. The key point of the example code is to introduce a way to classify the log into different levels, where each level of log has its own identifier. Let’s start with 2 design sketches, which demonstrate outputting the log via RTT and VCOM(UART).
+This example introduces a simple implementation of logging on EFR32 based devices. The key point of the example code is to introduce a way to classify the log into different levels, where each level of log has its own identifier.
 
 ## Features
 
-### Logging Interface
+### Logging Interfaces
 
 The example code supports both [SEGGER's Real Time Transfer (RTT)](https://www.segger.com/products/debug-probes/j-link/technology/about-real-time-transfer/) and Serial Terminal via UART (VCOM).
 
@@ -53,6 +55,7 @@ From the functionality perspective, the only difference between these 2 modes is
 3. Open the logging_config.h and modify below settings if needed.
 
    - LOGGING_CONFIG - see [Memory Usage](#memory-usage)
+   - TIME_ON - if you need to add time information to the log, set to 1. Because it utilizes the sl_sleep_timer service, you need to set macro - SL_SLEEPTIMER_WALLCLOCK_CONFIG to 1 in sl_sleeptimer_config.h file.
    - LOGGING_BUF_LENGTH - size of the dedicated buffer for the full featured mode.
    - LOGGING_INTERFACE - decide which interface or both the logging will be sent to.
    - FATAL_ABORT - if assert the program when a fatal logging is called.
