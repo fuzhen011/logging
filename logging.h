@@ -33,6 +33,12 @@ extern "C"
 #define ABORT() abort()
 #endif
 
+#if (ERROR_ABORT == 0)
+#define ERR_ABORT()
+#else
+#define ERR_ABORT() abort()
+#endif
+
 #if (LOGGING_CONFIG == LIGHT_WEIGHT)
 /* Light weight mode start */
 
@@ -166,8 +172,9 @@ static inline void __fill_file_line(char *in,
     if (LOGGING_LEVEL >=  LOGGING_ERROR) {                     \
       LOG_FILL_HEADER(ERR_FLAG);                               \
       LOG_PLAIN("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
-    }                                                          \
-  } while (0)
+      ERR_ABORT();
+}\
+}while (0)
 
 #define LOGW(__fmt__, ...)                                     \
   do {                                                         \
@@ -240,7 +247,8 @@ void logging_plain(const char *fmt, ...);
  */
 #define LOGF(fmt, ...) \
   do { LOG(LOGGING_FATAL, (fmt), ##__VA_ARGS__); ABORT(); } while (0)
-#define LOGE(fmt, ...) LOG(LOGGING_ERROR, (fmt), ##__VA_ARGS__)
+#define LOGE(fmt, ...) \
+  do { LOG(LOGGING_ERROR, (fmt), ##__VA_ARGS__); ERR_ABORT(); } while(0)
 #define LOGW(fmt, ...) LOG(LOGGING_WARNING, (fmt), ##__VA_ARGS__)
 #define LOGI(fmt, ...) LOG(LOGGING_IMPORTANT_INFO, (fmt), ##__VA_ARGS__)
 #define LOGH(fmt, ...) LOG(LOGGING_DEBUG_HIGHTLIGHT, (fmt), ##__VA_ARGS__)
@@ -314,7 +322,7 @@ void logging_plain(const char *fmt, ...);
 /*
  * For demostration or testing
  */
-void logging_demo(uint8_t lvl);
+  void logging_demo(uint8_t lvl);
 void test_hex_dump(void);
 #ifdef __cplusplus
 }
