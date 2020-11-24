@@ -260,7 +260,8 @@ void logging_plain(const char *fmt, ...);
 
 #endif // #if (LOGGING_CONFIG > LIGHT_WEIGHT)
 
-#ifndef ASSERT
+#ifdef ASSERT
+#undef ASSERT
 #define ASSERT  LOG_ASSERT
 #endif
 
