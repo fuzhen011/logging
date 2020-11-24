@@ -260,11 +260,6 @@ void logging_plain(const char *fmt, ...);
 
 #endif // #if (LOGGING_CONFIG > LIGHT_WEIGHT)
 
-#ifdef ASSERT
-#undef ASSERT
-#define ASSERT  LOG_ASSERT
-#endif
-
 #define LOG_ASSERT(exp)                   \
   do{                                     \
     if (!(exp)) {                         \
@@ -272,9 +267,15 @@ void logging_plain(const char *fmt, ...);
     }                                     \
   }while(0)
 
-#ifndef ASSERT_MSG
-#define ASSERT_MSG  LOG_ASSERT_MSG
+#ifdef ASSERT
+#undef ASSERT
 #endif
+#define ASSERT  LOG_ASSERT
+
+#ifdef ASSERT_MSG
+#undef ASSERT_MSG
+#endif
+#define ASSERT_MSG  LOG_ASSERT_MSG
 
 #define LOG_ASSERT_MSG(exp, fmt, ...)                         \
   do{                                                         \
