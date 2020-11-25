@@ -72,7 +72,7 @@ enum {
 #if (LOGGING_CONFIG == FULL_FEATURES)
 
 #ifndef TIME_ON
-#define TIME_ON 0
+#define TIME_ON 1
 #endif
 
 #ifndef LOCATION_ON

@@ -65,15 +65,18 @@ static int _fill_time(void)
     }
     return -1;
   }
-  sl_sleeptimer_timestamp_t t = sl_sleeptimer_get_time();
+  /* sl_sleeptimer_timestamp_t t = sl_sleeptimer_get_time(); */
+  uint16_t ms = 0;
+  sl_sleeptimer_timestamp_t t = sl_sleeptimer_get_time_ms(&ms);
 
   int ret = snprintf(lcfg.buf + lcfg.offset,
                      LOGGING_BUF_LENGTH - lcfg.offset,
-                     "[RT-%lu:%02lu:%02lu:%02lu]",
+                     "[RT-%lu:%02lu:%02lu:%02lu.%u]",
                      t / (24 * 60 * 60),
                      (t % (24 * 60 * 60)) / (60 * 60),
                      (t % (60 * 60)) / (60),
-                     t % 60);
+                     t % 60,
+                     ms);
   if (ret != -1) {
     lcfg.offset += ret;
     return 0;
