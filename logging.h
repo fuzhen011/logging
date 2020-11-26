@@ -18,6 +18,15 @@ extern "C"
 #include "logging_config.h"
 #include "logging_color_def.h"
 
+#include "device.h"
+
+#if defined(WDOG_ENABLED) && (WDOG_ENABLED == 1)
+#include "hal/wdog/wdog.h"
+#define WDOG_STOP()         wdog_set_state(0)
+#else
+#define WDOG_STOP()
+#endif
+
 /* UTILS */
 #ifndef   MIN
   #define MIN(a, b)         (((a) < (b)) ? (a) : (b))
@@ -263,6 +272,7 @@ void logging_plain(const char *fmt, ...);
 #define LOG_ASSERT(exp)                   \
   do{                                     \
     if (!(exp)) {                         \
+      WDOG_STOP();                        \
       LOGF("Assert in [%s]\n", __func__); \
     }                                     \
   }while(0)
@@ -280,6 +290,7 @@ void logging_plain(const char *fmt, ...);
 #define LOG_ASSERT_MSG(exp, fmt, ...)                         \
   do{                                                         \
     if (!(exp)) {                                             \
+      WDOG_STOP();                                            \
       LOGF("Assert in [%s] - " fmt, __func__, ##__VA_ARGS__); \
     }                                                         \
   }while(0)
