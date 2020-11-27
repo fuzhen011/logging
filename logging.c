@@ -41,24 +41,41 @@ static lcfg_t lcfg = { 0 };
 /* [2020-12-11 12:11:05] */
 #define TIME_SLOT_LEN 21
 
+int logging_set_time(sl_sleeptimer_date_t *dt)
+{
+  if (!dt) {
+    return -1;
+  }
+
+  sl_status_t sc = sl_sleeptimer_set_datetime(dt);
+  if (sc != SL_STATUS_OK) {
+    return -2;
+  }
+  lcfg.time_set = 1;
+  return 0;
+}
+
 static int _fill_time(void)
 {
+  uint16_t ms = 0;
+
   if (lcfg.time_set) {
     sl_sleeptimer_date_t dt = { 0 };
-    sl_status_t sl_ret = sl_sleeptimer_get_datetime(&dt);
+    sl_status_t sl_ret = sl_sleeptimer_get_datetime(&dt, &ms);
     if (sl_ret != SL_STATUS_OK) {
       return -1;
     }
 
     int ret = snprintf(lcfg.buf + lcfg.offset,
                        LOGGING_BUF_LENGTH - lcfg.offset,
-                       "[%04u-%02u-%02u %02u:%02u:%02u]",
+                       "[%04u-%02u-%02u %02u:%02u:%02u.%04u]",
                        dt.year + 1900,
                        dt.month + 1,
                        dt.month_day,
                        dt.hour,
                        dt.min,
-                       dt.sec);
+                       dt.sec,
+                       ms);
     if (ret != -1) {
       lcfg.offset += ret;
       return 0;
@@ -66,7 +83,6 @@ static int _fill_time(void)
     return -1;
   }
   /* sl_sleeptimer_timestamp_t t = sl_sleeptimer_get_time(); */
-  uint16_t ms = 0;
   sl_sleeptimer_timestamp_t t = sl_sleeptimer_get_time_ms(&ms);
 
   int ret = snprintf(lcfg.buf + lcfg.offset,

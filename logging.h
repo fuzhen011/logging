@@ -241,6 +241,7 @@ void hex_dump(const uint8_t *array_base,
               uint8_t align,
               uint8_t reverse);
 void logging_plain(const char *fmt, ...);
+int logging_set_time(sl_sleeptimer_date_t *dt);
 
 #define INIT_LOG(x) logging_init(x)
 
