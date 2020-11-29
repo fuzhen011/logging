@@ -18,6 +18,7 @@ extern "C"
 #include "logging_config.h"
 #include "logging_color_def.h"
 
+#include "em_core.h"
 #include "device.h"
 
 #if defined(WDOG_ENABLED) && (WDOG_ENABLED == 1)
@@ -273,10 +274,13 @@ int logging_set_time(sl_sleeptimer_date_t *dt);
 #define LOG_ASSERT(exp)                   \
   do{                                     \
     if (!(exp)) {                         \
+      CORE_irqState_t irqState;           \
+      CORE_CRITICAL_IRQ_DISABLE();        \
       WDOG_STOP();                        \
+      (void)irqState;                     \
       LOGF("Assert in [%s]\n", __func__); \
     }                                     \
-  }while(0)
+  }while (0)
 
 #ifdef ASSERT
 #undef ASSERT
@@ -291,7 +295,10 @@ int logging_set_time(sl_sleeptimer_date_t *dt);
 #define LOG_ASSERT_MSG(exp, fmt, ...)                         \
   do{                                                         \
     if (!(exp)) {                                             \
+      CORE_irqState_t irqState;                               \
+      CORE_CRITICAL_IRQ_DISABLE();                            \
       WDOG_STOP();                                            \
+      (void)irqState;                                         \
       LOGF("Assert in [%s] - " fmt, __func__, ##__VA_ARGS__); \
     }                                                         \
   }while(0)
