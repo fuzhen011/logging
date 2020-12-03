@@ -250,11 +250,11 @@ static void __logging_welcome(void)
   char buf[100] = { 0 };
 
   snprintf(buf, 100,
+           "\r\n"
            RTT_CTRL_BG_BRIGHT_BLUE
-           "Project Boots, Compiled at %s - %s"
+           "*** Project Boots Up. Compiled @ [%s - %s] ***"
            RTT_CTRL_RESET
-           "\n"
-           ,
+           "\n",
            __DATE__,
            __TIME__);
   __logging(buf);
