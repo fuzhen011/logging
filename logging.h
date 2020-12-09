@@ -19,7 +19,6 @@ extern "C"
 #include "logging_color_def.h"
 
 #include "em_core.h"
-#include "device.h"
 
 #if defined(WDOG_ENABLED) && (WDOG_ENABLED == 1)
 #include "hal/wdog/wdog.h"
