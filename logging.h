@@ -22,30 +22,30 @@ extern "C"
 
 #if defined(WDOG_ENABLED) && (WDOG_ENABLED == 1)
 #include "hal/wdog/wdog.h"
-#define WDOG_STOP()         wdog_set_state(0)
+#define WDOG_STOP()                   wdog_set_state(0)
 #else
 #define WDOG_STOP()
 #endif
 
 /* UTILS */
 #ifndef   MIN
-  #define MIN(a, b)         (((a) < (b)) ? (a) : (b))
+  #define MIN(a, b)                   (((a) < (b)) ? (a) : (b))
 #endif
 
 #ifndef   MAX
-  #define MAX(a, b)         (((a) > (b)) ? (a) : (b))
+  #define MAX(a, b)                   (((a) > (b)) ? (a) : (b))
 #endif
 
 #if (FATAL_ABORT == 0)
 #define ABORT()
 #else
-#define ABORT() abort()
+#define ABORT()                       abort()
 #endif
 
 #if (ERROR_ABORT == 0)
 #define ERR_ABORT()
 #else
-#define ERR_ABORT() abort()
+#define ERR_ABORT()                   abort()
 #endif
 
 #if (LOGGING_CONFIG == LIGHT_WEIGHT)
@@ -53,11 +53,11 @@ extern "C"
 
 #if (TIME_ON != 0)
 #include "sl_sleeptimer.h"
-#define TIME_INIT() sl_sleeptimer_init()
-#define TIME_GET()  sl_sleeptimer_get_time()
+#define TIME_INIT()                   sl_sleeptimer_init()
+#define TIME_GET()                    sl_sleeptimer_get_time()
 #else
 #define TIME_INIT()
-#define TIME_GET()  0
+#define TIME_GET()                    0
 #endif
 
 #if (LOGGING_INTERFACE == SEGGER_RTT)
@@ -97,8 +97,8 @@ extern "C"
 #endif
 
 static inline void __fill_file_line(char *in,
-                                    uint8_t in_len,
-                                    const char *file_name,
+                                    uint8_t      in_len,
+                                    const char   *file_name,
                                     unsigned int line)
 {
   char *p, *n, *posend;
@@ -114,7 +114,7 @@ static inline void __fill_file_line(char *in,
   if (!n) {
     n = strrchr(file_name, '\\');
   }
-  n = (n ? n + 1 : (char *)file_name);
+  n      = (n ? n + 1 : (char *)file_name);
   posend = strchr(n, '.');
 
   memcpy(tmp,
@@ -137,14 +137,14 @@ static inline void __fill_file_line(char *in,
     LOG_PLAIN("\n");                                                                                                           \
   } while (0)
 
-#define HEX_DUMP_8(array_base, len)  HEX_DUMP((array_base), (len), 8, 0)
+#define HEX_DUMP_8(array_base, len)   HEX_DUMP((array_base), (len), 8, 0)
 #define HEX_DUMP_16(array_base, len)  HEX_DUMP((array_base), (len), 16, 0)
 #define HEX_DUMP_32(array_base, len)  HEX_DUMP((array_base), (len), 32, 0)
 
 #define LOG_FILL_HEADER(flag)                                            \
   char exclusive_buf__[PREF_LEN] = { 0 };                                \
-  char exclusive_buf__1[FILE_LINE_LEN] = { 0 };                          \
-  uint32_t t = TIME_GET();                                               \
+  char     exclusive_buf__1[FILE_LINE_LEN] = { 0 };                      \
+  uint32_t t                               = TIME_GET();                 \
   __fill_file_line(exclusive_buf__1, FILE_LINE_LEN, __FILE__, __LINE__); \
   sprintf(exclusive_buf__, FMT_PREF,                                     \
           t / (24 * 60 * 60),                                            \
@@ -182,8 +182,8 @@ static inline void __fill_file_line(char *in,
       LOG_FILL_HEADER(ERR_FLAG);                               \
       LOG_PLAIN("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
       ERR_ABORT();
-}\
-}while (0)
+} \
+  } while (0)
 
 #define LOGW(__fmt__, ...)                                     \
   do {                                                         \
@@ -233,22 +233,22 @@ static inline void __fill_file_line(char *in,
 void logging_init(uint8_t level_threshold);
 void log_n(void);
 void logging_level_threshold_set(uint8_t l);
-int __log(const char *file_name, unsigned int line,
-          int lvl,
-          const char *fmt, ...);
+int  __log(const char *file_name, unsigned int line,
+           int lvl,
+           const char *fmt, ...);
 void hex_dump(const uint8_t *array_base,
-              size_t len,
-              uint8_t align,
-              uint8_t reverse);
+              size_t        len,
+              uint8_t       align,
+              uint8_t       reverse);
 void logging_plain(const char *fmt, ...);
-int logging_set_time(sl_sleeptimer_date_t *dt);
+int  logging_set_time(sl_sleeptimer_date_t *dt);
 
-#define INIT_LOG(x) logging_init(x)
+#define INIT_LOG(x)                   logging_init(x)
 
-#define LOG(lvl, fmt, ...) __log(__FILE__, __LINE__, (lvl), (fmt), ##__VA_ARGS__)
-#define LOGN() log_n()
+#define LOG(lvl, fmt, ...)            __log(__FILE__, __LINE__, (lvl), (fmt), ##__VA_ARGS__)
+#define LOGN()                        log_n()
 
-#define HEX_DUMP_8(array_base, len)  hex_dump((array_base), (len), 8, 0)
+#define HEX_DUMP_8(array_base, len)   hex_dump((array_base), (len), 8, 0)
 #define HEX_DUMP_16(array_base, len)  hex_dump((array_base), (len), 16, 0)
 #define HEX_DUMP_32(array_base, len)  hex_dump((array_base), (len), 32, 0)
 
@@ -259,14 +259,14 @@ int logging_set_time(sl_sleeptimer_date_t *dt);
   do { LOG(LOGGING_FATAL, (fmt), ##__VA_ARGS__); ABORT(); } while (0)
 #define LOGE(fmt, ...) \
   do { LOG(LOGGING_ERROR, (fmt), ##__VA_ARGS__); ERR_ABORT(); } while(0)
-#define LOGW(fmt, ...) LOG(LOGGING_WARNING, (fmt), ##__VA_ARGS__)
-#define LOGI(fmt, ...) LOG(LOGGING_IMPORTANT_INFO, (fmt), ##__VA_ARGS__)
-#define LOGH(fmt, ...) LOG(LOGGING_DEBUG_HIGHTLIGHT, (fmt), ##__VA_ARGS__)
-#define LOGD(fmt, ...) LOG(LOGGING_DEBUG, (fmt), ##__VA_ARGS__)
-#define LOGV(fmt, ...) LOG(LOGGING_VERBOSE, (fmt), ##__VA_ARGS__)
-#define LOG_PLAIN(fmt, ...) logging_plain((fmt), ##__VA_ARGS__)
+#define LOGW(fmt, ...)                LOG(LOGGING_WARNING, (fmt), ##__VA_ARGS__)
+#define LOGI(fmt, ...)                LOG(LOGGING_IMPORTANT_INFO, (fmt), ##__VA_ARGS__)
+#define LOGH(fmt, ...)                LOG(LOGGING_DEBUG_HIGHTLIGHT, (fmt), ##__VA_ARGS__)
+#define LOGD(fmt, ...)                LOG(LOGGING_DEBUG, (fmt), ##__VA_ARGS__)
+#define LOGV(fmt, ...)                LOG(LOGGING_VERBOSE, (fmt), ##__VA_ARGS__)
+#define LOG_PLAIN(fmt, ...)           logging_plain((fmt), ##__VA_ARGS__)
 
-#define LOGBGE(what, err) LOGE(what " returns Error[0x%04x]\n", (err))
+#define LOGBGE(what, err)             LOGE(what " returns Error[0x%04x]\n", (err))
 
 #endif // #if (LOGGING_CONFIG > LIGHT_WEIGHT)
 
@@ -284,7 +284,7 @@ int logging_set_time(sl_sleeptimer_date_t *dt);
 #ifdef ASSERT
 #undef ASSERT
 #endif
-#define ASSERT  LOG_ASSERT
+#define ASSERT      LOG_ASSERT
 
 #ifdef ASSERT_MSG
 #undef ASSERT_MSG

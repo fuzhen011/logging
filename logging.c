@@ -20,9 +20,9 @@
 
 typedef struct {
   uint8_t time_set;
-  int min_level;
-  size_t offset;
-  char buf[LOGGING_BUF_LENGTH];
+  int     min_level;
+  size_t  offset;
+  char    buf[LOGGING_BUF_LENGTH];
 }lcfg_t;
 
 #if (LOGGING_CONFIG > LIGHT_WEIGHT)
@@ -39,7 +39,7 @@ static lcfg_t lcfg = { 0 };
 #if (TIME_ON != 0)
 #include "sl_sleeptimer.h"
 /* [2020-12-11 12:11:05] */
-#define TIME_SLOT_LEN 21
+#define TIME_SLOT_LEN         21
 
 int logging_set_time(sl_sleeptimer_date_t *dt)
 {
@@ -60,8 +60,8 @@ static int _fill_time(void)
   uint16_t ms = 0;
 
   if (lcfg.time_set) {
-    sl_sleeptimer_date_t dt = { 0 };
-    sl_status_t sl_ret = sl_sleeptimer_get_datetime(&dt, &ms);
+    sl_sleeptimer_date_t dt     = { 0 };
+    sl_status_t          sl_ret = sl_sleeptimer_get_datetime(&dt, &ms);
     if (sl_ret != SL_STATUS_OK) {
       return -1;
     }
@@ -105,10 +105,10 @@ static int _fill_time(void)
 #endif // #if (TIME_ON != 0)
 
 #if (LOCATION_ON != 0)
-static int _fill_file_line(const char *file_name,
+static int _fill_file_line(const char   *file_name,
                            unsigned int line)
 {
-  int ret;
+  int  ret;
   char *p, *n, *posend;
   char tmp[FILE_NAME_LENGTH] = { 0 };
 
@@ -122,7 +122,7 @@ static int _fill_file_line(const char *file_name,
   if (!n) {
     n = strrchr(file_name, '\\');
   }
-  n = (n ? n + 1 : (char *)file_name);
+  n      = (n ? n + 1 : (char *)file_name);
   posend = strchr(n, '.');
 
   memcpy(tmp,
@@ -147,36 +147,36 @@ static int _fill_file_line(const char *file_name,
 static int _fill_level(int lvl)
 {
   const char *flag;
-  char *p;
-  size_t flaglen;
+  char       *p;
+  size_t     flaglen;
 
   switch (lvl) {
     case LOGGING_FATAL:
-      flag = FTL_FLAG;
+      flag    = FTL_FLAG;
       flaglen = sizeof(FTL_FLAG);
       break;
     case LOGGING_ERROR:
-      flag = ERR_FLAG;
+      flag    = ERR_FLAG;
       flaglen = sizeof(ERR_FLAG);
       break;
     case LOGGING_WARNING:
-      flag = WRN_FLAG;
+      flag    = WRN_FLAG;
       flaglen = sizeof(WRN_FLAG);
       break;
     case LOGGING_IMPORTANT_INFO:
-      flag = IPM_FLAG;
+      flag    = IPM_FLAG;
       flaglen = sizeof(IPM_FLAG);
       break;
     case LOGGING_DEBUG_HIGHTLIGHT:
-      flag = DHL_FLAG;
+      flag    = DHL_FLAG;
       flaglen = sizeof(DHL_FLAG);
       break;
     case LOGGING_DEBUG:
-      flag = DBG_FLAG;
+      flag    = DBG_FLAG;
       flaglen = sizeof(DBG_FLAG);
       break;
     default:
-      flag = VER_FLAG;
+      flag    = VER_FLAG;
       flaglen = sizeof(VER_FLAG);
       break;
   }
@@ -306,9 +306,9 @@ void logging_level_threshold_set(uint8_t l)
 }
 
 void hex_dump(const uint8_t *array_base,
-              size_t len,
-              uint8_t align,
-              uint8_t reverse)
+              size_t        len,
+              uint8_t       align,
+              uint8_t       reverse)
 {
   if (!align) {
     align = 16;
