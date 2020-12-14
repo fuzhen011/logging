@@ -2,7 +2,7 @@
     > File Name: logging_color_def.h
     > Author: Kevin
     > Created Time: 2020-08-10
-    > Description: 
+    > Description:
  ************************************************************************/
 
 #ifndef LOGGING_COLOR_DEF_H
