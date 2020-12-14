@@ -113,7 +113,8 @@ typedef struct {
  *
  *       _StoreChar
  */
-static void _StoreChar(SEGGER_RTT_PRINTF_DESC * p, char c)
+static void _StoreChar(SEGGER_RTT_PRINTF_DESC * p,
+                       char                   c)
 {
   unsigned Cnt;
 
@@ -139,7 +140,12 @@ static void _StoreChar(SEGGER_RTT_PRINTF_DESC * p, char c)
  *
  *       _PrintUnsigned
  */
-static void _PrintUnsigned(SEGGER_RTT_PRINTF_DESC * pBufferDesc, unsigned v, unsigned Base, unsigned NumDigits, unsigned FieldWidth, unsigned FormatFlags)
+static void _PrintUnsigned(SEGGER_RTT_PRINTF_DESC * pBufferDesc,
+                           unsigned               v,
+                           unsigned               Base,
+                           unsigned               NumDigits,
+                           unsigned               FieldWidth,
+                           unsigned               FormatFlags)
 {
   static const char _aV2C[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
   unsigned          Div;
@@ -230,7 +236,12 @@ static void _PrintUnsigned(SEGGER_RTT_PRINTF_DESC * pBufferDesc, unsigned v, uns
  *
  *       _PrintInt
  */
-static void _PrintInt(SEGGER_RTT_PRINTF_DESC * pBufferDesc, int v, unsigned Base, unsigned NumDigits, unsigned FieldWidth, unsigned FormatFlags)
+static void _PrintInt(SEGGER_RTT_PRINTF_DESC * pBufferDesc,
+                      int                    v,
+                      unsigned               Base,
+                      unsigned               NumDigits,
+                      unsigned               FieldWidth,
+                      unsigned               FormatFlags)
 {
   unsigned Width;
   int      Number;
@@ -325,7 +336,9 @@ static void _PrintInt(SEGGER_RTT_PRINTF_DESC * pBufferDesc, int v, unsigned Base
  *    >= 0:  Number of bytes which have been stored in the "Up"-buffer.
  *     < 0:  Error
  */
-int SEGGER_RTT_vprintf(unsigned BufferIndex, const char * sFormat, va_list * pParamList)
+int SEGGER_RTT_vprintf(unsigned   BufferIndex,
+                       const char * sFormat,
+                       va_list    * pParamList)
 {
   char                   c;
   SEGGER_RTT_PRINTF_DESC BufferDesc;
@@ -500,7 +513,9 @@ int SEGGER_RTT_vprintf(unsigned BufferIndex, const char * sFormat, va_list * pPa
  *          s: Print the string pointed to by the argument
  *          p: Print the argument as an 8-digit hexadecimal integer. (Argument shall be a pointer to void.)
  */
-int SEGGER_RTT_printf(unsigned BufferIndex, const char * sFormat, ...)
+int SEGGER_RTT_printf(unsigned   BufferIndex,
+                      const char * sFormat,
+                      ...)
 {
   int     r;
   va_list ParamList;

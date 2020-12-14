@@ -327,7 +327,9 @@ static void _DoInit(void)
  *  Return value
  *    >= 0 - Number of bytes written into buffer.
  */
-static unsigned _WriteBlocking(SEGGER_RTT_BUFFER_UP* pRing, const char* pBuffer, unsigned NumBytes)
+static unsigned _WriteBlocking(SEGGER_RTT_BUFFER_UP* pRing,
+                               const char          * pBuffer,
+                               unsigned            NumBytes)
 {
   unsigned NumBytesToWrite;
   unsigned NumBytesWritten;
@@ -393,7 +395,9 @@ static unsigned _WriteBlocking(SEGGER_RTT_BUFFER_UP* pRing, const char* pBuffer,
  *  Notes
  *    (1) If there might not be enough space in the "Up"-buffer, call _WriteBlocking
  */
-static void _WriteNoCheck(SEGGER_RTT_BUFFER_UP* pRing, const char* pData, unsigned NumBytes)
+static void _WriteNoCheck(SEGGER_RTT_BUFFER_UP* pRing,
+                          const char          * pData,
+                          unsigned            NumBytes)
 {
   unsigned NumBytesAtOnce;
   unsigned WrOff;
@@ -461,7 +465,8 @@ static void _WriteNoCheck(SEGGER_RTT_BUFFER_UP* pRing, const char* pData, unsign
  *    pRing        Ring buffer to post to.
  *    TerminalId   Terminal ID to switch to.
  */
-static void _PostTerminalSwitch(SEGGER_RTT_BUFFER_UP* pRing, unsigned char TerminalId)
+static void _PostTerminalSwitch(SEGGER_RTT_BUFFER_UP* pRing,
+                                unsigned char       TerminalId)
 {
   unsigned char ac[2];
 
@@ -526,7 +531,9 @@ static unsigned _GetAvailWriteSpace(SEGGER_RTT_BUFFER_UP* pRing)
  *  Return value
  *    Number of bytes that have been read.
  */
-unsigned SEGGER_RTT_ReadNoLock(unsigned BufferIndex, void* pData, unsigned BufferSize)
+unsigned SEGGER_RTT_ReadNoLock(unsigned BufferIndex,
+                               void     * pData,
+                               unsigned BufferSize)
 {
   unsigned                NumBytesRem;
   unsigned                NumBytesRead;
@@ -619,7 +626,9 @@ unsigned SEGGER_RTT_ReadNoLock(unsigned BufferIndex, void* pData, unsigned Buffe
  *  Return value
  *    Number of bytes that have been read.
  */
-unsigned SEGGER_RTT_Read(unsigned BufferIndex, void* pBuffer, unsigned BufferSize)
+unsigned SEGGER_RTT_Read(unsigned BufferIndex,
+                         void     * pBuffer,
+                         unsigned BufferSize)
 {
   unsigned NumBytesRead;
   //
@@ -659,7 +668,9 @@ unsigned SEGGER_RTT_Read(unsigned BufferIndex, void* pBuffer, unsigned BufferSiz
  *    (3) Do not use SEGGER_RTT_WriteWithOverwriteNoLock if a J-Link
  *        connection reads RTT data.
  */
-void SEGGER_RTT_WriteWithOverwriteNoLock(unsigned BufferIndex, const void* pBuffer, unsigned NumBytes)
+void SEGGER_RTT_WriteWithOverwriteNoLock(unsigned  BufferIndex,
+                                         const void* pBuffer,
+                                         unsigned  NumBytes)
 {
   const char            *           pData;
   SEGGER_RTT_BUFFER_UP  * pRing;
@@ -762,7 +773,9 @@ void SEGGER_RTT_WriteWithOverwriteNoLock(unsigned BufferIndex, const void* pBuff
  *        Either by calling SEGGER_RTT_Init() or calling another RTT API function first.
  */
 #if (RTT_USE_ASM == 0)
-unsigned SEGGER_RTT_WriteSkipNoLock(unsigned BufferIndex, const void* pBuffer, unsigned NumBytes)
+unsigned SEGGER_RTT_WriteSkipNoLock(unsigned  BufferIndex,
+                                    const void* pBuffer,
+                                    unsigned  NumBytes)
 {
   const char            *           pData;
   SEGGER_RTT_BUFFER_UP  * pRing;
@@ -842,7 +855,9 @@ unsigned SEGGER_RTT_WriteSkipNoLock(unsigned BufferIndex, const void* pBuffer, u
  *        and may only be called after RTT has been initialized.
  *        Either by calling SEGGER_RTT_Init() or calling another RTT API function first.
  */
-unsigned SEGGER_RTT_WriteNoLock(unsigned BufferIndex, const void* pBuffer, unsigned NumBytes)
+unsigned SEGGER_RTT_WriteNoLock(unsigned  BufferIndex,
+                                const void* pBuffer,
+                                unsigned  NumBytes)
 {
   unsigned              Status;
   unsigned              Avail;
@@ -914,7 +929,9 @@ unsigned SEGGER_RTT_WriteNoLock(unsigned BufferIndex, const void* pBuffer, unsig
  *  Notes
  *    (1) Data is stored according to buffer flags.
  */
-unsigned SEGGER_RTT_Write(unsigned BufferIndex, const void* pBuffer, unsigned NumBytes)
+unsigned SEGGER_RTT_Write(unsigned  BufferIndex,
+                          const void* pBuffer,
+                          unsigned  NumBytes)
 {
   unsigned Status;
   //
@@ -952,7 +969,8 @@ unsigned SEGGER_RTT_Write(unsigned BufferIndex, const void* pBuffer, unsigned Nu
  *    (2) String passed to this function has to be \0 terminated
  *    (3) \0 termination character is *not* stored in RTT buffer
  */
-unsigned SEGGER_RTT_WriteString(unsigned BufferIndex, const char* s)
+unsigned SEGGER_RTT_WriteString(unsigned  BufferIndex,
+                                const char* s)
 {
   unsigned Len;
 
@@ -982,7 +1000,8 @@ unsigned SEGGER_RTT_WriteString(unsigned BufferIndex, const char* s)
  *        and may only be called after RTT has been initialized.
  *        Either by calling SEGGER_RTT_Init() or calling another RTT API function first.
  */
-unsigned SEGGER_RTT_PutCharSkipNoLock(unsigned BufferIndex, char c)
+unsigned SEGGER_RTT_PutCharSkipNoLock(unsigned BufferIndex,
+                                      char     c)
 {
   SEGGER_RTT_BUFFER_UP  * pRing;
   unsigned              WrOff;
@@ -1029,7 +1048,8 @@ unsigned SEGGER_RTT_PutCharSkipNoLock(unsigned BufferIndex, char c)
  *  Notes
  *    (1) If there is not enough space in the "Up"-buffer, the character is dropped.
  */
-unsigned SEGGER_RTT_PutCharSkip(unsigned BufferIndex, char c)
+unsigned SEGGER_RTT_PutCharSkip(unsigned BufferIndex,
+                                char     c)
 {
   SEGGER_RTT_BUFFER_UP  * pRing;
   unsigned              WrOff;
@@ -1085,7 +1105,8 @@ unsigned SEGGER_RTT_PutCharSkip(unsigned BufferIndex, char c)
  *  Notes
  *    (1) Data is stored according to buffer flags.
  */
-unsigned SEGGER_RTT_PutChar(unsigned BufferIndex, char c)
+unsigned SEGGER_RTT_PutChar(unsigned BufferIndex,
+                            char     c)
 {
   SEGGER_RTT_BUFFER_UP  * pRing;
   unsigned              WrOff;
@@ -1278,7 +1299,10 @@ unsigned SEGGER_RTT_HasDataUp(unsigned BufferIndex)
  *    >= 0 - O.K. Buffer Index
  *     < 0 - Error
  */
-int SEGGER_RTT_AllocDownBuffer(const char* sName, void* pBuffer, unsigned BufferSize, unsigned Flags)
+int SEGGER_RTT_AllocDownBuffer(const char* sName,
+                               void      * pBuffer,
+                               unsigned  BufferSize,
+                               unsigned  Flags)
 {
   int BufferIndex;
 
@@ -1324,7 +1348,10 @@ int SEGGER_RTT_AllocDownBuffer(const char* sName, void* pBuffer, unsigned Buffer
  *    >= 0 - O.K. Buffer Index
  *     < 0 - Error
  */
-int SEGGER_RTT_AllocUpBuffer(const char* sName, void* pBuffer, unsigned BufferSize, unsigned Flags)
+int SEGGER_RTT_AllocUpBuffer(const char* sName,
+                             void      * pBuffer,
+                             unsigned  BufferSize,
+                             unsigned  Flags)
 {
   int BufferIndex;
 
@@ -1376,7 +1403,11 @@ int SEGGER_RTT_AllocUpBuffer(const char* sName, void* pBuffer, unsigned BufferSi
  *    May only be called once per buffer.
  *    Buffer name and flags can be reconfigured using the appropriate functions.
  */
-int SEGGER_RTT_ConfigUpBuffer(unsigned BufferIndex, const char* sName, void* pBuffer, unsigned BufferSize, unsigned Flags)
+int SEGGER_RTT_ConfigUpBuffer(unsigned  BufferIndex,
+                              const char* sName,
+                              void      * pBuffer,
+                              unsigned  BufferSize,
+                              unsigned  Flags)
 {
   int r;
 
@@ -1424,7 +1455,11 @@ int SEGGER_RTT_ConfigUpBuffer(unsigned BufferIndex, const char* sName, void* pBu
  *    May only be called once per buffer.
  *    Buffer name and flags can be reconfigured using the appropriate functions.
  */
-int SEGGER_RTT_ConfigDownBuffer(unsigned BufferIndex, const char* sName, void* pBuffer, unsigned BufferSize, unsigned Flags)
+int SEGGER_RTT_ConfigDownBuffer(unsigned  BufferIndex,
+                                const char* sName,
+                                void      * pBuffer,
+                                unsigned  BufferSize,
+                                unsigned  Flags)
 {
   int r;
 
@@ -1463,7 +1498,8 @@ int SEGGER_RTT_ConfigDownBuffer(unsigned BufferIndex, const char* sName, void* p
  *    >= 0  O.K.
  *     < 0  Error
  */
-int SEGGER_RTT_SetNameUpBuffer(unsigned BufferIndex, const char* sName)
+int SEGGER_RTT_SetNameUpBuffer(unsigned  BufferIndex,
+                               const char* sName)
 {
   int r;
 
@@ -1495,7 +1531,8 @@ int SEGGER_RTT_SetNameUpBuffer(unsigned BufferIndex, const char* sName)
  *    >= 0  O.K.
  *     < 0  Error
  */
-int SEGGER_RTT_SetNameDownBuffer(unsigned BufferIndex, const char* sName)
+int SEGGER_RTT_SetNameDownBuffer(unsigned  BufferIndex,
+                                 const char* sName)
 {
   int r;
 
@@ -1527,7 +1564,8 @@ int SEGGER_RTT_SetNameDownBuffer(unsigned BufferIndex, const char* sName)
  *    >= 0  O.K.
  *     < 0  Error
  */
-int SEGGER_RTT_SetFlagsUpBuffer(unsigned BufferIndex, unsigned Flags)
+int SEGGER_RTT_SetFlagsUpBuffer(unsigned BufferIndex,
+                                unsigned Flags)
 {
   int r;
 
@@ -1559,7 +1597,8 @@ int SEGGER_RTT_SetFlagsUpBuffer(unsigned BufferIndex, unsigned Flags)
  *    >= 0  O.K.
  *     < 0  Error
  */
-int SEGGER_RTT_SetFlagsDownBuffer(unsigned BufferIndex, unsigned Flags)
+int SEGGER_RTT_SetFlagsDownBuffer(unsigned BufferIndex,
+                                  unsigned Flags)
 {
   int r;
 
@@ -1654,7 +1693,8 @@ int SEGGER_RTT_SetTerminal(unsigned char TerminalId)
  *     < 0 - Error.
  *
  */
-int SEGGER_RTT_TerminalOut(unsigned char TerminalId, const char* s)
+int SEGGER_RTT_TerminalOut(unsigned char TerminalId,
+                           const char    * s)
 {
   int                   Status;
   unsigned              FragLen;

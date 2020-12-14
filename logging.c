@@ -202,7 +202,8 @@ static inline void __logging(const char *str)
 #endif
 }
 
-void logging_plain(const char *fmt, ...)
+void logging_plain(const char *fmt,
+                   ...)
 {
   va_list valist;
 
@@ -217,9 +218,11 @@ void logging_plain(const char *fmt, ...)
   __logging(lcfg.buf);
 }
 
-int __log(const char *file_name, unsigned int line,
-          int lvl,
-          const char *fmt, ...)
+int __log(const char   *file_name,
+          unsigned int line,
+          int          lvl,
+          const char   *fmt,
+          ...)
 {
   va_list valist;
 
