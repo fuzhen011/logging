@@ -1,8 +1,8 @@
 /*************************************************************************
-    > File Name: logging_config.h
-    > Author: Kevin
-    > Created Time: 2020-08-10
-    > Description:
+ *  @file logging_config.h
+ *  @author Kevin
+ *  @date 2020-08-10
+ *  @note
  ************************************************************************/
 
 #ifndef LOGGING_CONFIG_H
