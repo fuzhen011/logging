@@ -375,8 +375,13 @@ void test_hex_dump(void);
   }while(0)
 
 /**
- * @defgroup utils
- * @brief - Utils
+ * ******************************************************************
+ * @defgroup se_call
+ * @brief secure calls for BGAPI commands, basically the macros check the return
+ * value of the BGAPI calls and assert the return value to be normal, used only
+ * for Bluetooth application
+ *
+ ******************************************************************
  * @{ */
 
 /**
@@ -409,7 +414,7 @@ void test_hex_dump(void);
                    se_call_exclusive_returned_value);                \
   }while(0)
 
-/**  @} */
+/**  @} se_call */
 
 #ifdef __cplusplus
 }
