@@ -87,7 +87,7 @@ extern "C"
 #define INIT_LOG(x)
 #endif
 
-static inline void __fill_file_line(char *in,
+static inline void __fill_file_line(char         *in,
                                     uint8_t      in_len,
                                     const char   *file_name,
                                     unsigned int line)
@@ -173,8 +173,8 @@ static inline void __fill_file_line(char *in,
       LOG_FILL_HEADER(ERR_FLAG);                               \
       LOG_PLAIN("%s" __fmt__, exclusive_buf__, ##__VA_ARGS__); \
       ERR_ABORT();
-} \
-  } while (0)
+}\
+}while (0)
 
 #define LOGW(__fmt__, ...)                                     \
   do {                                                         \
@@ -221,20 +221,89 @@ static inline void __fill_file_line(char *in,
 #if defined(TIME_ON) && (TIME_ON == 1)
 #include "sl_sleeptimer.h"
 #endif
+
+/**
+ * ******************************************************************
+ * @defgroup logging_func
+ * @brief logging functions for the full featured mode.
+ *
+ ******************************************************************
+ * @{ */
+
+/**
+ * @brief logging_init initialization for logging functionality
+ *
+ * @param level_threshold - minimal logging level threshold
+ */
 void logging_init(uint8_t level_threshold);
+
+/**
+ * @brief log_n function to output a new line
+ */
 void log_n(void);
+
+/**
+ * @brief logging_level_threshold_set set logging level threshold at runtime
+ *
+ * @param l - new level
+ */
 void logging_level_threshold_set(uint8_t l);
+
+/**
+ * @brief __log function to wrap a logging message with all prefix tags and put
+ * them altogether to the logging buffer.
+ *
+ * @param file_name - file name (location) information
+ * @param line - line (location) information
+ * @param lvl - logging message level information
+ * @param fmt - format string
+ * @param ... - parameters
+ *
+ * @return 0 on success, -1 otherwise
+ */
 int  __log(const char   *file_name,
            unsigned int line,
            int          lvl,
            const char   *fmt,
            ...);
+
+/**
+ * @brief hex_dump function to dump an array of content which is not printable
+ * string.
+ *
+ * @param array_base - base pointer of the array
+ * @param len - array length in bytes
+ * @param align - line alignment deciding how many bytes will show in a single
+ * line
+ * @param reverse - 0 - Little indian, 1 otherwise
+ */
 void hex_dump(const uint8_t *array_base,
               size_t        len,
               uint8_t       align,
               uint8_t       reverse);
+
+/**
+ * @brief logging_plain function to output the logging message without the
+ * prefixed tags
+ *
+ * @param fmt - format string
+ * @param ... - parameters
+ */
 void logging_plain(const char *fmt,
                    ...);
+
+/**
+ * @brief logging_demo function for fine-tuning the logging colors, flags etc.
+ *
+ * @param lvl - which level message to output, 0xff to output all in sequence
+ */
+void logging_demo(uint8_t lvl);
+
+/**
+ * @brief test_hex_dump function for testing the HEX_DUMP* macros
+ */
+void test_hex_dump(void);
+/**  @} logging_func */
 
 #define INIT_LOG(x)                   logging_init(x)
 
@@ -288,8 +357,13 @@ void logging_plain(const char *fmt,
   }while(0)
 
 /**
- * @defgroup utils
- * @brief - Utils
+ * ******************************************************************
+ * @defgroup se_call
+ * @brief secure calls for BGAPI commands, basically the macros check the return
+ * value of the BGAPI calls and assert the return value to be normal, used only
+ * for Bluetooth application
+ *
+ ******************************************************************
  * @{ */
 
 /**
@@ -322,13 +396,9 @@ void logging_plain(const char *fmt,
                    se_call_exclusive_returned_value);                \
   }while(0)
 
-/**  @} */
+/**  @} se_call */
 
-/*
- * For demostration or testing
- */
-  void logging_demo(uint8_t lvl);
-void test_hex_dump(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -18,11 +18,14 @@
 #define LD(...)
 #endif
 
+/**
+ * @brief logging configuration structure
+ */
 typedef struct {
-  uint8_t time_set;
-  int     min_level;
-  size_t  offset;
-  char    buf[LOGGING_BUF_LENGTH];
+  uint8_t time_set;                /**< Boolean value indicating if logging is fed by wall clock  */
+  int     min_level;               /**< Logging level threshold, logging with higher priority will be logged out*/
+  size_t  offset;                  /**< Internal offset for logging buffer  */
+  char    buf[LOGGING_BUF_LENGTH]; /**< Buffer to logging message  */
 }lcfg_t;
 
 #if (LOGGING_CONFIG > LIGHT_WEIGHT)
@@ -41,6 +44,16 @@ static lcfg_t lcfg = { 0 };
 /* [2020-12-11 12:11:05] */
 #define TIME_SLOT_LEN         21
 
+/**
+ * @brief _fill_time function to fill the logging buffer with the time
+ * information
+ *
+ * @note if no wall clock information is available, the time information will
+ * be the time since last boot, which is the default state. Otherwise, the real
+ * time information will be filled.
+ *
+ * @return 0 on success, -1 otherwise
+ */
 static int _fill_time(void)
 {
   if (lcfg.time_set) {
@@ -86,6 +99,17 @@ static int _fill_time(void)
 #endif // #if (TIME_ON != 0)
 
 #if (LOCATION_ON != 0)
+
+/**
+ * @brief _fill_file_line function to fill the logging buffer with location
+ * information which includes the file and line number where the logging
+ * happens.
+ *
+ * @param file_name - file name information
+ * @param line - line information
+ *
+ * @return 0 on success, -1 otherwise
+ */
 static int _fill_file_line(const char   *file_name,
                            unsigned int line)
 {
@@ -125,6 +149,13 @@ static int _fill_file_line(const char   *file_name,
 
 #endif
 
+/**
+ * @brief _fill_level fill the logging buffer with level flag.
+ *
+ * @param lvl - which level the logging is
+ *
+ * @return 0 on success, -1 otherwise
+ */
 static int _fill_level(int lvl)
 {
   const char *flag;
@@ -170,6 +201,12 @@ static int _fill_level(int lvl)
   return 0;
 }
 
+/**
+ * @brief __logging output function for logging message according to the
+ * LOGGING_INTERFACE macro definition
+ *
+ * @param str - logging message
+ */
 static inline void __logging(const char *str)
 {
 #if (LOGGING_INTERFACE == SEGGER_RTT)
@@ -248,6 +285,9 @@ void log_n(void)
   __logging("\n");
 }
 
+/**
+ * @brief __logging_welcome output the compiling information of the program.
+ */
 static void __logging_welcome(void)
 {
   char buf[100] = { 0 };
